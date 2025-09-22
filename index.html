@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      width: 300px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+    }
+    input.error {
+      border-color: red;
+    }
+    input.success {
+      border-color: green;
+    }
+    small {
+      color: red;
+      visibility: hidden;
+    }
+    small.show {
+      visibility: visible;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .success-message {
+      text-align: center;
+      color: green;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="registrationForm">
+    <h2>Register</h2>
+    <div class="form-group">
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" required>
+      <small>Error message</small>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" required>
+      <small>Error message</small>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" required>
+      <small>Error message</small>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" required>
+      <small>Error message</small>
+    </div>
+
+    <button type="submit">Submit</button>
+    <div class="success-message" id="successMessage"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById('registrationForm');
+    const fullname = document.getElementById('fullname');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const phone = document.getElementById('phone');
+    const successMessage = document.getElementById('successMessage');
+
+    function showError(input, message) {
+      const formGroup = input.parentElement;
+      const small = formGroup.querySelector('small');
+      small.innerText = message;
+      small.classList.add('show');
+      input.classList.add('error');
+      input.classList.remove('success');
+    }
+
+    function showSuccess(input) {
+      const formGroup = input.parentElement;
+      const small = formGroup.querySelector('small');
+      small.classList.remove('show');
+      input.classList.remove('error');
+      input.classList.add('success');
+    }
+
+    function checkName() {
+      if (fullname.value.trim() === '') {
+        showError(fullname, 'Full Name is required');
+        return false;
+      } else {
+        showSuccess(fullname);
+        return true;
+      }
+    }
+
+    function checkEmail() {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!regex.test(email.value.trim())) {
+        showError(email, 'Invalid Email');
+        return false;
+      } else {
+        showSuccess(email);
+        return true;
+      }
+    }
+
+    function checkPassword() {
+      // At least 6 characters, 1 uppercase, 1 number
+      const regex = /^(?=.[A-Z])(?=.\d).{6,}$/;
+      if (!regex.test(password.value.trim())) {
+        showError(password, 'Password must be 6+ chars, include 1 uppercase & 1 number');
+        return false;
+      } else {
+        showSuccess(password);
+        return true;
+      }
+    }
+
+    function checkPhone() {
+      const regex = /^[0-9]{10}$/;
+      if (!regex.test(phone.value.trim())) {
+        showError(phone, 'Phone must be 10 digits');
+        return false;
+      } else {
+        showSuccess(phone);
+        return true;
+      }
+    }
+
+    // Real-time validation
+    fullname.addEventListener('input', checkName);
+    email.addEventListener('input', checkEmail);
+    password.addEventListener('input', checkPassword);
+    phone.addEventListener('input', checkPhone);
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (checkName() & checkEmail() & checkPassword() & checkPhone()) {
+        successMessage.innerText = "Form submitted successfully!";
+        form.reset();
+        [fullname, email, password, phone].forEach(input => input.classList.remove('success'));
+      } else {
+        successMessage.innerText = "";
+      }
+    });
+  </script>
+
+</body>
+</html>
